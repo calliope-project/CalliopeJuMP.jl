@@ -1,4 +1,4 @@
-using JuMP; using NCDatasets; using AxisArrays; using Util;
+using JuMP; using NCDatasets; using AxisArrays; using CalliopeJuMP.Util;
 
 function load_network_constraints(model_dict)
     sets = model_dict["sets"]

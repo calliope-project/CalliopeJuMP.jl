@@ -1,14 +1,13 @@
-module CalliopeBackend
+module CalliopeJuMP
 
 export build_julia_model, model_dict
 
 # Import external modules
 using NCDatasets; using JuMP; using AxisArrays; using YAML;
 
-using CPLEX; using GLPKMathProgInterface; using Gurobi
-
-# Import internal modules
-using Util, Variables, Objective
+include("Util.jl")
+include("Variables.jl")
+include("Objective.jl")
 
 module load_constraints
 
@@ -43,8 +42,13 @@ function build_julia_model(path_to_dataset)
     parameters = Dict()
     dimensions = [NCDatasets.nc_inq_dimname(dataset.ncid, i)
                   for i in NCDatasets.nc_inq_dimids(dataset.ncid, false)]
+
     for var in keys(dataset)
+        show(var)
         if var in dimensions
+            if var == "timesteps"
+                show(dataset[var][1])
+            end
             sets[var] = dataset[var][:]
         else
             parameters[var] = get_variable(dataset, var)
@@ -52,18 +56,25 @@ function build_julia_model(path_to_dataset)
     end
 
     # Create JuMP model, including assigning a solver
-    solver_dict = Dict(
-        "cplex"=>CplexSolver,
-        "gurobi"=>GurobiSolver
-    )
 
-    if haskey(sets, "loc_techs_milp") || haskey(sets, "loc_techs_purchase")
-        solver_dict["glpk"] = GLPKSolverMIP
+    run_solver = dataset.attrib["run.solver"]
+    if run_solver == "cplex"
+        using CPLEX
+        solver = CplexSolver
+    elseif run_solver == "gurobi"
+        using Gurobi
+        solver = GurobiSolver
+    elseif run_solver == "glpk"
+        using GLPKMathProgInterface
+        if haskey(sets, "loc_techs_milp") || haskey(sets, "loc_techs_purchase")
+            solver = GLPKSolverMIP
+        else
+            solver = GLPKSolverLP
+        end
     else
-        solver_dict["glpk"] = GLPKSolverLP
+        throw("unknown solver", run_solver)
     end
-
-    backend_model = JuMP.Model(solver = solver_dict[dataset.attrib["run.solver"]]());
+    backend_model = JuMP.Model(solver = solver());
 
     model_dict = Dict("backend_model"=>backend_model,
                       "parameters"=>parameters,
@@ -130,4 +141,5 @@ function build_julia_model(path_to_dataset)
     return model_dict
 
 end
+
 end

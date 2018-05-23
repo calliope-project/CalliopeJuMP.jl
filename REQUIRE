@@ -3,3 +3,5 @@ JuMP
 NCDatasets
 AxisArrays
 Missings
+YAML
+GLPK

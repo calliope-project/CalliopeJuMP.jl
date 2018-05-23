@@ -1,4 +1,4 @@
-using JuMP; using NCDatasets; using AxisArrays; using Util; using Missings
+using JuMP; using NCDatasets; using AxisArrays; using Missings; using CalliopeJuMP.Util;
 
 function load_capacity_constraints(model_dict)
     sets = model_dict["sets"]

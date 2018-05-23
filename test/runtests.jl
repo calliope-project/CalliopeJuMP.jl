@@ -1,4 +1,4 @@
-using CalliopeBackend
+using CalliopeJuMP
 using Base.Test
 
 # write your own tests here

@@ -3,7 +3,7 @@ export get_variable, get_param, build_constraint, get_previous_timestep,
 get_loc_tech_carriers, get_loc_tech, get_timestep_weight, split_comma_list,
 get_conversion_plus_io, loc_tech_is_in
 
-using AxisArrays; using NCDatasets; using JuMP; using CalliopeBackend; using Missings
+using AxisArrays; using NCDatasets; using JuMP; using CalliopeJuMP; using Missings
 
 
 function get_variable(dataset, var::String)
@@ -119,7 +119,7 @@ function build_constraint(constraint_sets, constraint_name, model_dict; tier=not
     temporary_constraint = Array{ConstraintRef}((length(i) for i in indexed_sets)...)
     # get the relevant function from this module
     temporary_constraint_rule = getfield(
-        CalliopeBackend.load_constraints,
+        CalliopeJuMP.load_constraints,
         Symbol(string(constraint_name, "_constraint_rule"))
     )
 

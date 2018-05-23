@@ -1,6 +1,6 @@
 
 ###############
-CalliopeBackend
+CalliopeJuMP
 ###############
 
 |badge_gitter| |badge_license|
@@ -23,9 +23,9 @@ Calliope is a framework to develop energy system models, with a focus on flexibi
 Quick start
 -----------
 
-CalliopeBackend is not expected to be utilised as a stand-alone package, but instead called from the Calliope framework. By setting ``run.backend: jump``, Julia's JuMP package will be used to solve the model in the backend. Without setting this option, Calliope's `Pyomo <http://www.pyomo.org/>`_ backend will be used instead.
+CalliopeJuMP is not expected to be utilised as a stand-alone package, but instead called from the Calliope framework. By setting ``run.backend: jump``, Julia's JuMP package will be used to solve the model in the backend. Without setting this option, Calliope's `Pyomo <http://www.pyomo.org/>`_ backend will be used instead.
 
-If the user does not have Julia or CalliopeBackend installed on their device, they will be prompted to do so on running their model for the first time with ``run.backend: jump``.
+If the user does not have Julia or CalliopeJuMP installed on their device, they will be prompted to do so on running their model for the first time with ``run.backend: jump``.
 
 Documentation
 -------------
